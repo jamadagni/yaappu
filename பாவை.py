@@ -54,7 +54,7 @@
 """
 
 
-from PyQt5.QtCore import Qt, QSettings
+from PyQt5.QtCore import Qt, QSettings, QSize, QPoint, QByteArray
 from PyQt5.QtGui import QSyntaxHighlighter
 from PyQt5.QtWidgets import *
 
@@ -355,6 +355,12 @@ class பாவை_ஜன்னல்(QWidget):
 
     def அமைப்புகள்_பதிவிடு(தான்):
         அமை = QSettings("ஶ்ரீரமண ஶர்மா", "பாவை")
+        அமை.beginGroup("ஜன்னல்")
+        அமை.setValue("அளவு", தான்.size())
+        அமை.setValue("இடம்", தான்.pos())
+        அமை.setValue("உள்ளீடு - அடி ஆய்வு உடைப்பான் அளவுகள்", தான்.உள்ளீடு_அடி_ஆய்வு_உடைப்பான்.saveState())
+        அமை.setValue("உள்ளீடு - அடி ஆய்வு - பா மொத்த ஆய்வு உடைப்பான் அளவுகள்", தான்.உள்ளீடு_அடி_ஆய்வு_பா_மொத்த_ஆய்வு_உடைப்பான்.saveState())
+        அமை.endGroup()
         அமை.setValue("கடவுள் வாழ்த்து காட்டியாயிற்று", True)
         அமை.setValue("சீரின் முழு வாய்ப்பாடைக் காட்டு", தான்.சீரின்_முழு_வாய்ப்பாடு_தேர்வு_அழுத்துவான்.isChecked())
         அமை.setValue("வண்ணத்திட்டம்", "வெண்மை" if தான்.வண்ணத்திட்டம்_வெண்மை_அழுத்துவான்.isChecked() else "கறுமை")
@@ -365,6 +371,14 @@ class பாவை_ஜன்னல்(QWidget):
 
     def அமைப்புகள்_பதிவெடு(தான்):
         அமை = QSettings("ஶ்ரீரமண ஶர்மா", "பாவை")
+        அமை.beginGroup("ஜன்னல்")
+        if அமை.value("அளவு"):
+            தான்.resize(அமை.value("அளவு", type = QSize))
+        if அமை.value("இடம்"):
+            தான்.move(அமை.value("இடம்", type = QPoint))
+        தான்.உள்ளீடு_அடி_ஆய்வு_உடைப்பான்.restoreState(அமை.value("உள்ளீடு - அடி ஆய்வு உடைப்பான் அளவுகள்", type = QByteArray))
+        தான்.உள்ளீடு_அடி_ஆய்வு_பா_மொத்த_ஆய்வு_உடைப்பான்.restoreState(அமை.value("உள்ளீடு - அடி ஆய்வு - பா மொத்த ஆய்வு உடைப்பான் அளவுகள்", type = QByteArray))
+        அமை.endGroup()
         if not அமை.value("கடவுள் வாழ்த்து காட்டியாயிற்று", defaultValue = False, type = bool):
             தான்.உள்ளீட்டுப்பெட்டி.setPlainText(கடவுள்_வாழ்த்து)
         தான்.சீரின்_முழு_வாய்ப்பாடு_தேர்வு_அழுத்துவான்.setChecked(அமை.value("சீரின் முழு வாய்ப்பாடைக் காட்டு", defaultValue = False, type = bool))
